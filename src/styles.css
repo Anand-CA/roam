@@ -273,3 +273,47 @@ h1 em { color: var(--orange); font-family: 'Playfair Display', serif; font-weigh
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+.header-actions { display: flex; align-items: center; gap: 7px; }
+.theme-button {
+  display: grid;
+  width: 33px;
+  height: 33px;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.theme-button:hover { background: var(--ink); color: var(--paper); }
+.app-shell, .app-header, .bottom-nav, .category-tile, .filter, .icon-button, .save-button, .surprise-modal, .location-button, .theme-button, .more-button, .account-card, .install-button {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, opacity .2s ease;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #f2f0e9;
+  --paper: #111311;
+  --muted: #a7a69f;
+  --line: #2b2e2a;
+  --orange: #ff7047;
+  --green: #8eaf88;
+}
+html[data-theme="dark"], html[data-theme="dark"] body { background: #080a08; }
+html[data-theme="dark"] .app-shell { box-shadow: 0 0 40px rgb(0 0 0 / 35%); }
+html[data-theme="dark"] .app-header { background: rgb(17 19 17 / 94%); }
+html[data-theme="dark"] .bottom-nav { background: rgb(17 19 17 / 96%); }
+html[data-theme="dark"] .location-button,
+html[data-theme="dark"] .theme-button,
+html[data-theme="dark"] .icon-button { border-color: var(--line); }
+html[data-theme="dark"] .category-tile.cafes,
+html[data-theme="dark"] .filter { background: #1d201d; color: var(--muted); }
+html[data-theme="dark"] .category-tile.food { background: #8e4b36; color: #fff7f1; }
+html[data-theme="dark"] .category-tile.places { background: #3d4d38; color: #f1f6eb; }
+html[data-theme="dark"] .category-tile.events { background: #f1efe7; color: #111311; }
+html[data-theme="dark"] .filter.active { background: var(--ink); color: #111311; }
+html[data-theme="dark"] .category-tag,
+html[data-theme="dark"] .save-button { background: #191b19; color: var(--ink); }
+html[data-theme="dark"] .inline-message { background: #2b211c; color: #e8a888; }
+html[data-theme="dark"] .modal-backdrop { background: rgb(0 0 0 / 72%); }
+html[data-theme="dark"] .floating-install { color: #111311; }
