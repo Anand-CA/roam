@@ -1,0 +1,15 @@
+{
+  "id": "/roam/",
+  "name": "Roam — Find your somewhere",
+  "short_name": "Roam",
+  "description": "Good things are closer than you think.",
+  "start_url": "/roam/",
+  "scope": "/roam/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f2ed",
+  "theme_color": "#f4f2ed",
+  "icons": [
+    { "src": "/roam/icons/roam.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,4 +1,7 @@
 project_id = "roam"
 
 [functions.discover]
-verify_jwt = true
+verify_jwt = false
+
+[functions.recommend]
+verify_jwt = false
