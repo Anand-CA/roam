@@ -133,7 +133,7 @@ function ListingScreen({ title, subtitle, items, tabs, activeTab, setActiveTab, 
   </div>
 }
 
-function ListCard({ item, onOpen, saved, onSave }: { item: Discovery; index: number; onOpen: (i: Discovery) => void; saved: boolean; onSave: (i: Discovery) => void }) {
+function ListCard({ item, onOpen, saved, onSave }: { item: Discovery; onOpen: (i: Discovery) => void; saved: boolean; onSave: (i: Discovery) => void }) {
   return <article className="list-card" onClick={() => onOpen(item)}>
     <img src={imageSource(item.image)} alt="" />
     <div className="list-card-copy"><h3>{item.title}</h3><Rating /><p>{item.detail} · {item.distance}</p><small>{item.category} · {item.category === 'Food' ? 'Indian' : item.category === 'Cafe' ? 'Coffee · Desserts' : 'Kochi'}</small></div>
