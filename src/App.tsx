@@ -1,16 +1,15 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   ArrowLeft, ArrowRight, Bookmark, CalendarDays, ChevronRight, Coffee, Compass,
-  Crosshair, Filter, Home, Layers, MapPin, Menu, Moon, Navigation, Plus,
+  Crosshair, Home, Layers, MapPin, Menu, Moon, Navigation, Plus,
   Search, Settings, Share2, SlidersHorizontal, Sparkles, Sun, Ticket, UserRound,
-  Utensils, Trees, X
+  Utensils, Trees
 } from 'lucide-react'
 import { discoveries as seed, type Discovery } from './data/discoveries'
 
 type Screen = 'home' | 'explore' | 'saved' | 'profile' | 'food' | 'events' | 'detail' | 'map' | 'planner' | 'notifications'
 type Theme = 'light' | 'dark'
 
-const KOCHI = { latitude: 9.9312, longitude: 76.2673 }
 const foodSeed: Discovery[] = [
   { id: 'paragon', category: 'Food', title: 'Paragon Restaurant', detail: 'Biryani · Indian · Family Friendly', distance: '2.1 km', image: 'photo-1517248135467-4c7edcad34c4', note: '4.7 (12.4K)', budgetMinInr: 300, budgetMaxInr: 700 },
   { id: 'rahmaniya', category: 'Food', title: 'Rahmaniya Hotel', detail: 'Biryani · Beef · Kerala', distance: '3.4 km', image: 'photo-1552566626-52f8b828add9', note: '4.6 (8.1K)', budgetMinInr: 250, budgetMaxInr: 600 },
@@ -28,15 +27,9 @@ const placeSeed: Discovery[] = [
   { id: 'cherai', category: 'Place', title: 'Cherai Beach', detail: 'Beach · Sunset · Nature', distance: '24 km', image: 'photo-1507525428034-b723cf961d3e', note: 'NATURE', budgetMinInr: 0, budgetMaxInr: 0 },
   { id: 'mattancherry', category: 'Place', title: 'Mattancherry', detail: 'Culture · Markets · Heritage', distance: '3.1 km', image: 'photo-1524492412937-b28074a5d7da', note: 'CULTURE', budgetMinInr: 0, budgetMaxInr: 0 },
 ]
-const cafeSeed = foodSeed.filter((item) => item.category === 'Cafe')
 
 function imageSource(value: string) {
   return value.startsWith('http') ? value : `https://images.unsplash.com/${value}?auto=format&fit=crop&w=1000&q=85`
-}
-
-function formatBudget(min: number, max: number) {
-  if (min === 0 && max === 0) return 'FREE'
-  return min === max ? `₹${min}` : `₹${min}–₹${max}`
 }
 
 function Rating({ value = '4.7', reviews = '12.4K' }: { value?: string; reviews?: string }) {
@@ -140,7 +133,7 @@ function ListingScreen({ title, subtitle, items, tabs, activeTab, setActiveTab, 
   </div>
 }
 
-function ListCard({ item, index, onOpen, saved, onSave }: { item: Discovery; index: number; onOpen: (i: Discovery) => void; saved: boolean; onSave: (i: Discovery) => void }) {
+function ListCard({ item, onOpen, saved, onSave }: { item: Discovery; index: number; onOpen: (i: Discovery) => void; saved: boolean; onSave: (i: Discovery) => void }) {
   return <article className="list-card" onClick={() => onOpen(item)}>
     <img src={imageSource(item.image)} alt="" />
     <div className="list-card-copy"><h3>{item.title}</h3><Rating /><p>{item.detail} · {item.distance}</p><small>{item.category} · {item.category === 'Food' ? 'Indian' : item.category === 'Cafe' ? 'Coffee · Desserts' : 'Kochi'}</small></div>
