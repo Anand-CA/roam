@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   ArrowLeft, ArrowRight, Bookmark, CalendarDays, ChevronRight, Coffee, Compass,
   Crosshair, Filter, Home, Layers, MapPin, Menu, Moon, Navigation, Plus,
@@ -128,7 +128,7 @@ function HomeScreen({ onNavigate, onOpen, saved, toggleSaved }: { onNavigate: (s
   </div>
 }
 
-function QuickTile({ tone, icon, title, subtitle, onClick }: { tone: string; icon: React.ReactNode; title: string; subtitle: string; onClick: () => void }) {
+function QuickTile({ tone, icon, title, subtitle, onClick }: { tone: string; icon: ReactNode; title: string; subtitle: string; onClick: () => void }) {
   return <button className={`quick-tile ${tone}`} onClick={onClick}>{icon}<span><strong>{title}</strong><small>{subtitle}</small></span></button>
 }
 
