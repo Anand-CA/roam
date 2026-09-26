@@ -1,0 +1,4 @@
+project_id = "roam"
+
+[functions.discover]
+verify_jwt = true
