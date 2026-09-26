@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowRight, Bookmark, CalendarDays, Compass, Home, MapPin, Search, Shuffle, Sparkles, UserRound, Utensils, Coffee, Trees } from 'lucide-react'
+import { ArrowRight, Bookmark, CalendarDays, Compass, Home, MapPin, Search, Shuffle, Sparkles, UserRound, Utensils, Coffee, Trees, Moon, Sun } from 'lucide-react'
 import { discoveries as sampleDiscoveries, type Discovery } from './data/discoveries'
 import { supabase } from './lib/supabase'
 
@@ -33,6 +33,11 @@ function App() {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null)
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const stored = localStorage.getItem('roam:theme')
+    if (stored === 'light' || stored === 'dark') return stored
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  })
   const requestController = useRef<AbortController | null>(null)
 
   const shown = useMemo(() => items.filter((item) =>
@@ -94,6 +99,17 @@ function App() {
 
   useEffect(() => { localStorage.setItem('roam:saved', JSON.stringify(saved)) }, [saved])
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    localStorage.setItem('roam:theme', theme)
+    const meta = document.querySelector('meta[name="theme-color"]')
+    meta?.setAttribute('content', theme === 'dark' ? '#111311' : '#f4f2ed')
+  }, [theme])
+
+  function toggleTheme() {
+    setTheme((current) => current === 'light' ? 'dark' : 'light')
+  }
+
   function useMyLocation() {
     if (!navigator.geolocation) {
       setMessage('Location is not available on this device.')
@@ -146,7 +162,12 @@ function App() {
     <main className="app-shell">
       <header className="app-header">
         <a className="wordmark" href="#top" onClick={() => setScreen('Home')}>roam<span>.</span></a>
-        <button className="location-button" onClick={useMyLocation} aria-label="Use my current location"><MapPin size={14} /><span>{locationName}</span><span className="location-dot" /></button>
+        <div className="header-actions">
+          <button className="location-button" onClick={useMyLocation} aria-label="Use my current location"><MapPin size={14} /><span>{locationName}</span><span className="location-dot" /></button>
+          <button className="theme-button" onClick={toggleTheme} aria-label={theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme'} title={theme === 'light' ? 'Dark theme' : 'Light theme'}>
+            {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+          </button>
+        </div>
       </header>
 
       {screen === 'You' ? <section className="account-screen">
