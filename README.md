@@ -14,7 +14,7 @@ The current Home screen uses sample discovery data so the interface works before
 
 ## Run locally
 
-1. Install Node.js 20 or newer and the [Supabase CLI](https://supabase.com/docs/guides/cli).
+1. Install Node.js 22 or newer and the [Supabase CLI](https://supabase.com/docs/guides/cli).
 2. Install app dependencies with `npm install`.
 3. Copy `.env.example` to `.env.local` and set the Supabase project URL and anon key.
 4. Start Vite with `npm run dev`.
