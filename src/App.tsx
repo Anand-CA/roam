@@ -6,7 +6,6 @@ import {
   Utensils, Trees, X
 } from 'lucide-react'
 import { discoveries as seed, type Discovery } from './data/discoveries'
-import { supabase } from './lib/supabase'
 
 type Screen = 'home' | 'explore' | 'saved' | 'profile' | 'food' | 'events' | 'detail' | 'map' | 'planner' | 'notifications'
 type Theme = 'light' | 'dark'
@@ -82,7 +81,7 @@ function App() {
       {screen === 'home' && <HomeScreen onNavigate={setScreen} onOpen={openDetail} saved={saved} toggleSaved={toggleSaved} />}
       {screen === 'food' && <ListingScreen title="Food" subtitle="Kochi" items={foodSeed} activeTab={activeTab} setActiveTab={setActiveTab} onBack={goBack} onOpen={openDetail} saved={saved} toggleSaved={toggleSaved} tabs={['ALL', 'BIRIYANI', 'SOUTH INDIAN', 'CAFES', 'SEAFOOD']} />}
       {screen === 'events' && <ListingScreen title="Events" subtitle="Kochi" items={eventSeed} activeTab={activeTab} setActiveTab={setActiveTab} onBack={goBack} onOpen={openDetail} saved={saved} toggleSaved={toggleSaved} tabs={['TODAY', 'THIS WEEK', 'MUSIC', 'COMEDY', 'FOOD']} />}
-      {screen === 'explore' && <ExploreScreen onBack={goBack} onOpen={openDetail} onMap={() => setScreen('map')} />}
+      {screen === 'explore' && <ExploreScreen onOpen={openDetail} onMap={() => setScreen('map')} />}
       {screen === 'saved' && <SavedScreen items={allItems.filter((item) => saved.includes(String(item.id)))} onOpen={openDetail} />}
       {screen === 'profile' && <ProfileScreen theme={theme} onTheme={() => setTheme(theme === 'light' ? 'dark' : 'light')} />}
       {screen === 'detail' && <DetailScreen item={selected} saved={saved.includes(String(selected.id))} onBack={goBack} onSave={() => toggleSaved(selected)} />}
@@ -175,7 +174,7 @@ function PlannerScreen({ onBack, onOpen }: { onBack: () => void; onOpen: (i: Dis
   return <div className="screen planner-screen"><Header title="AI Planner" onBack={onBack} /><div className="planner-copy"><h1>Got 3 hours<br />free tonight?</h1><p>Here’s a plan for you.</p></div><div className="timeline">{[['6:00 PM', foodSeed[2], 'Specialty coffee'],['7:00 PM', eventSeed[1], 'Stand-up comedy'],['9:00 PM', foodSeed[0], 'Biryani']].map(([time,item,label]) => <div className="timeline-row" key={time as string}><time>{time}</time><div className="timeline-dot" /><button onClick={() => onOpen(item as Discovery)}><img src={imageSource((item as Discovery).image)} alt="" /><span><strong>{(item as Discovery).title}</strong><small>{label as string} · {(item as Discovery).distance}</small></span></button></div>)}</div><button className="save-plan"><Sparkles /> SAVE PLAN <ArrowRight /></button></div>
 }
 
-function ExploreScreen({ onBack, onOpen, onMap }: { onBack: () => void; onOpen: (i: Discovery) => void; onMap: () => void }) {
+function ExploreScreen({ onOpen, onMap }: { onOpen: (i: Discovery) => void; onMap: () => void }) {
   return <div className="screen explore-screen"><Header title="Explore" subtitle="Kochi" right="search" /><div className="chip-row">{['ALL','NATURE','CAFES','CULTURE','PHOTO SPOTS'].map((x,i) => <button className={i===0?'chip active':'chip'} key={x}>{x}</button>)}</div><button className="explore-feature" onClick={() => onOpen(placeSeed[0])}><img src={imageSource(placeSeed[0].image)} alt="" /><span>FORT KOCHI<small>1.4 km</small></span><ArrowRight /></button><div className="explore-grid">{placeSeed.slice(1).map((item) => <button key={item.id} onClick={() => onOpen(item)}><img src={imageSource(item.image)} alt="" /><span>{item.title.toUpperCase()}<small>{item.distance}</small></span><ArrowRight /></button>)}</div><button className="map-launch" onClick={onMap}><MapPin /> VIEW ON MAP</button></div>
 }
 
