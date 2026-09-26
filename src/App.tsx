@@ -164,7 +164,29 @@ function MapScreen({ item, onBack, onOpen }: { item: Discovery; onBack: () => vo
 }
 
 function PlannerScreen({ onBack, onOpen }: { onBack: () => void; onOpen: (i: Discovery) => void }) {
-  return <div className="screen planner-screen"><Header title="AI Planner" onBack={onBack} /><div className="planner-copy"><h1>Got 3 hours<br />free tonight?</h1><p>Here’s a plan for you.</p></div><div className="timeline">{[['6:00 PM', foodSeed[2], 'Specialty coffee'],['7:00 PM', eventSeed[1], 'Stand-up comedy'],['9:00 PM', foodSeed[0], 'Biryani']].map(([time,item,label]) => <div className="timeline-row" key={time as string}><time>{time}</time><div className="timeline-dot" /><button onClick={() => onOpen(item as Discovery)}><img src={imageSource((item as Discovery).image)} alt="" /><span><strong>{(item as Discovery).title}</strong><small>{label as string} · {(item as Discovery).distance}</small></span></button></div>)}</div><button className="save-plan"><Sparkles /> SAVE PLAN <ArrowRight /></button></div>
+  const plan: Array<{ time: string; item: Discovery; label: string }> = [
+    { time: '6:00 PM', item: foodSeed[2], label: 'Specialty coffee' },
+    { time: '7:00 PM', item: eventSeed[1], label: 'Stand-up comedy' },
+    { time: '9:00 PM', item: foodSeed[0], label: 'Biryani' },
+  ]
+
+  return <div className="screen planner-screen">
+    <Header title="AI Planner" onBack={onBack} />
+    <div className="planner-copy"><h1>Got 3 hours<br />free tonight?</h1><p>Here’s a plan for you.</p></div>
+    <div className="timeline">
+      {plan.map(({ time, item, label }) => (
+        <div className="timeline-row" key={time}>
+          <time>{time}</time>
+          <div className="timeline-dot" />
+          <button onClick={() => onOpen(item)}>
+            <img src={imageSource(item.image)} alt="" />
+            <span><strong>{item.title}</strong><small>{label} · {item.distance}</small></span>
+          </button>
+        </div>
+      ))}
+    </div>
+    <button className="save-plan"><Sparkles /> SAVE PLAN <ArrowRight /></button>
+  </div>
 }
 
 function ExploreScreen({ onOpen, onMap }: { onOpen: (i: Discovery) => void; onMap: () => void }) {
