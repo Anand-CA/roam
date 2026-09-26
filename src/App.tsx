@@ -129,7 +129,7 @@ function ListingScreen({ title, subtitle, items, tabs, activeTab, setActiveTab, 
   return <div className="screen listing-screen">
     <Header title={title} subtitle={subtitle} onBack={onBack} right="filter" />
     <div className="chip-row">{tabs.map((tab) => <button className={activeTab === tab ? 'chip active' : 'chip'} key={tab} onClick={() => setActiveTab(tab)}>{tab}</button>)}</div>
-    <div className="list-stack">{items.map((item, index) => <ListCard key={item.id} item={item} index={index} onOpen={onOpen} saved={saved.includes(String(item.id))} onSave={toggleSaved} />)}</div>
+    <div className="list-stack">{items.map((item) => <ListCard key={item.id} item={item} onOpen={onOpen} saved={saved.includes(String(item.id))} onSave={toggleSaved} />)}</div>
   </div>
 }
 
