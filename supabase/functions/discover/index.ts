@@ -2,6 +2,8 @@
 // never add them to browser environment variables.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
+const CATEGORIES = new Set(['Food', 'Cafe', 'Place', 'Event'])
+
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
   if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
@@ -13,22 +15,37 @@ Deno.serve(async (request) => {
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
   if (!supabaseUrl || !expectedApiKey) return json({ error: 'Server configuration is incomplete' }, 500)
 
-  let input: { latitude?: unknown; longitude?: unknown; radiusMeters?: unknown; category?: unknown }
+  let input: Record<string, unknown>
   try {
-    input = await request.json()
+    const body: unknown = await request.json()
+    if (!isRecord(body)) return json({ error: 'Request body must be a JSON object' }, 400)
+    input = body
   } catch {
     return json({ error: 'Request body must be valid JSON' }, 400)
   }
 
   const { latitude, longitude } = input
-  const radiusMeters = typeof input.radiusMeters === 'number' ? Math.floor(input.radiusMeters) : 5000
-  const categories = ['Food', 'Cafe', 'Place', 'Event']
-  const category = typeof input.category === 'string' && categories.includes(input.category) ? input.category : null
-  if (typeof latitude !== 'number' || latitude < -90 || latitude > 90 || typeof longitude !== 'number' || longitude < -180 || longitude > 180) {
+  if (typeof latitude !== 'number' || !Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
+      typeof longitude !== 'number' || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
     return json({ error: 'Valid latitude and longitude are required' }, 400)
   }
 
-  const supabase = createClient(supabaseUrl, expectedApiKey)
+  const radiusInput = input.radiusMeters
+  if (radiusInput !== undefined && (typeof radiusInput !== 'number' || !Number.isFinite(radiusInput))) {
+    return json({ error: 'radiusMeters must be a number' }, 400)
+  }
+  const radiusMeters = typeof radiusInput === 'number' ? Math.floor(radiusInput) : 5000
+
+  const categoryInput = input.category
+  if (categoryInput !== undefined && categoryInput !== null &&
+      (typeof categoryInput !== 'string' || !CATEGORIES.has(categoryInput))) {
+    return json({ error: 'category must be Food, Cafe, Place, or Event' }, 400)
+  }
+  const category = typeof categoryInput === 'string' ? categoryInput : null
+
+  const supabase = createClient(supabaseUrl, expectedApiKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  })
   const { data, error } = await supabase.rpc('nearby_discoveries', {
     user_latitude: latitude,
     user_longitude: longitude,
@@ -41,8 +58,12 @@ Deno.serve(async (request) => {
     return json({ error: 'Could not load nearby discoveries' }, 500)
   }
 
-  return json({ items: data ?? [], origin: { latitude, longitude }, radiusMeters })
+  return json({ items: data ?? [], origin: { latitude, longitude }, radiusMeters: Math.min(Math.max(radiusMeters, 100), 25000) })
 })
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
