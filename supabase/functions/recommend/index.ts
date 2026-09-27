@@ -89,7 +89,7 @@ Deno.serve(async (request) => {
 })
 
 function parseChoice(content: string): { id: string; reason: string } | null {
-  const cleaned = content.trim().replace(/^\`\`\`(?:json)?\\s*/i, '').replace(/\\s*\`\`\`$/, '')
+  const cleaned = content.trim().replace(/^\x60{3}(?:json)?\s*/i, '').replace(/\s*\x60{3}$/, '')
   try {
     const value: unknown = JSON.parse(cleaned)
     if (isRecord(value) && typeof value.id === 'string' && typeof value.reason === 'string') {
